@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        form {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+        .preview {
+            width: 50%;
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #e9e9e9;
+            text-align: left;
+            display: none;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Contact Us</h2>
+    <form id="contactForm" method="POST">
+        <!-- Name -->
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <span class="error" id="nameError"></span>
+
+        <!-- Email -->
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <span class="error" id="emailError"></span>
+
+        <!-- Phone Number -->
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone">
+        <span class="error" id="phoneError"></span>
+
+        <!-- Message -->
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+        <span class="error" id="messageError"></span>
+
+        <!-- Preferred Contact Method (Radio Buttons) -->
+        <label>Preferred Contact Method:</label>
+        <input type="radio" name="contactMethod" value="Email"> Email
+        <input type="radio" name="contactMethod" value="Phone"> Phone
+        <input type="radio" name="contactMethod" value="Both"> Both
+
+        <!-- Inquiry Type (Dropdown) -->
+        <label for="inquiry">Inquiry Type:</label>
+        <select id="inquiry" name="inquiry">
+            <option value="">Select an option</option>
+            <option value="General Inquiry">General Inquiry</option>
+            <option value="Support Request">Support Request</option>
+            <option value="Feedback">Feedback</option>
+        </select>
+
+        <!-- Buttons -->
+        <div class="btn-container">
+            <button type="button" onclick="previewForm()">Preview</button>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <!-- Preview Section -->
+    <div class="preview" id="previewSection">
+        <h3>Preview</h3>
+        <p><strong>Name:</strong> <span id="previewName"></span></p>
+        <p><strong>Email:</strong> <span id="previewEmail"></span></p>
+        <p><strong>Phone Number:</strong> <span id="previewPhone"></span></p>
+        <p><strong>Message:</strong> <span id="previewMessage"></span></p>
+        <p><strong>Preferred Contact Method:</strong> <span id="previewContactMethod"></span></p>
+        <p><strong>Inquiry Type:</strong> <span id="previewInquiry"></span></p>
+    </div>
+<!-- citations -->
+    <footer>
+        <h3>Sources & References</h3>
+        <ul>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">MDN Web Docs - HTML Forms</a></li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Constraint_validation" target="_blank">MDN Web Docs - Form Validation</a></li>
+            <li><a href="https://www.w3schools.com/html/html_forms.asp" target="_blank">W3Schools - HTML Forms</a></li>
+            <li><a href="https://www.w3schools.com/js/js_validation.asp" target="_blank">W3Schools - JavaScript Validation</a></li>
+        </ul>
+    </footer>
+
+
+    <script>
+        function previewForm() {
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let phone = document.getElementById("phone").value;
+            let message = document.getElementById("message").value;
+            let contactMethod = document.querySelector('input[name="contactMethod"]:checked');
+            let inquiry = document.getElementById("inquiry").value;
+
+            if (!validateForm()) return;
+
+            // Assign values to preview section
+            document.getElementById("previewName").innerText = name;
+            document.getElementById("previewEmail").innerText = email;
+            document.getElementById("previewPhone").innerText = phone;
+            document.getElementById("previewMessage").innerText = message;
+            document.getElementById("previewContactMethod").innerText = contactMethod ? contactMethod.value : "Not selected";
+            document.getElementById("previewInquiry").innerText = inquiry;
+
+            // Show preview section
+            document.getElementById("previewSection").style.display = "block";
+        }
+
+        function validateForm() {
+            let valid = true;
+
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let phone = document.getElementById("phone").value;
+            let message = document.getElementById("message").value;
+
+            document.getElementById("nameError").innerText = name ? "" : "Name is required.";
+            document.getElementById("emailError").innerText = validateEmail(email) ? "" : "Invalid email format.";
+            document.getElementById("phoneError").innerText = validatePhone(phone) ? "" : "Phone must be 10 digits.";
+            document.getElementById("messageError").innerText = message ? "" : "Message is required.";
+
+            if (!name || !validateEmail(email) || !validatePhone(phone) || !message) {
+                valid = false;
+            }
+            
+            return valid;
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validatePhone(phone) {
+            return /^\d{10}$/.test(phone);
+        }
+
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+</html>
